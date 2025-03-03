@@ -8,11 +8,14 @@ use App\Http\Controllers\EspecialistaController;
 use App\Http\Controllers\HistorialMedicoController;
 use App\Http\Controllers\PagoController;
 use App\Http\Controllers\UsuarioController;
-use App\Models\Pago;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome'); // Muestra la vista welcome.blade.php
+
+Route::get('api/get-csrf-token', function () {
+    return Response::json([
+        'csrf_token' => csrf_token()
+    ]);
 });
 
 Route::post('api/enviar-codigo', [AuthController::class, 'sendVerificationCode']);
