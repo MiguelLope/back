@@ -11,6 +11,10 @@ use App\Http\Controllers\UsuarioController;
 use App\Models\Pago;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/', function () {
+    return view('welcome'); // Muestra la vista welcome.blade.php
+});
+
 Route::post('api/enviar-codigo', [AuthController::class, 'sendVerificationCode']);
 Route::post('api/verificar-codigo', [AuthController::class, 'verifyCode']);
 
