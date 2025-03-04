@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
 
-Route::get('/get-csrf-token', function (Request $request) {
+Route::get('api/get-csrf-token', function (Request $request) {
     return Response::json(['csrf_token' => csrf_token()])
         ->withCookie(cookie('XSRF-TOKEN', csrf_token(), 60, null, null, false, false));
 });
