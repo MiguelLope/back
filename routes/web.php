@@ -12,11 +12,10 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('api/get-csrf-token', function () {
-    return Response::json([
-        'csrf_token' => csrf_token()
-    ]);
+Route::get('/api/get-csrf-token', function () {
+    return response()->json(['csrf_token' => csrf_token()]);
 });
+
 
 Route::post('api/enviar-codigo', [AuthController::class, 'sendVerificationCode']);
 Route::post('api/verificar-codigo', [AuthController::class, 'verifyCode']);
