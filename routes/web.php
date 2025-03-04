@@ -10,10 +10,12 @@ use App\Http\Controllers\PagoController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 
-Route::get('/api/get-csrf-token', function () {
-    return response()->json(['csrf_token' => csrf_token()]);
+Route::get('/get-csrf-token', function (Request $request) {
+    return Response::json(['csrf_token' => csrf_token()])
+        ->withCookie(cookie('XSRF-TOKEN', csrf_token(), 60, null, null, false, false));
 });
 
 
