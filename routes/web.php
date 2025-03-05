@@ -10,6 +10,15 @@ use App\Http\Controllers\PagoController;
 use App\Http\Controllers\UsuarioController;
 use App\Models\Pago;
 use Illuminate\Support\Facades\Route;
+use Laravel\Sanctum\Sanctum;
+
+Route::get('/debug-sanctum-url', function() {
+    return response()->json([
+        'current_application_url' => Sanctum::currentApplicationUrlWithPort(),
+        'app_url_from_env' => env('APP_URL'),
+        'trusted_domains' => config('sanctum.stateful')
+    ]);
+});
 
 Route::post('api/enviar-codigo', [AuthController::class, 'sendVerificationCode']);
 Route::post('api/verificar-codigo', [AuthController::class, 'verifyCode']);
