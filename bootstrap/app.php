@@ -12,12 +12,24 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
-        $middleware->validateCsrfTokens(except: [
-            env('APP_URL') . '/api/*'
+        // Configuración prioritaria de middlewares
+        $middleware->priority([
+            \App\Http\Middleware\Cors::class, // CORS debe ir primero
+            \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
+            \Illuminate\Cookie\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            \Illuminate\Session\Middleware\StartSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
+            \Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \Illuminate\Auth\Middleware\Authorize::class,
         ]);
-         //$middleware->append(Cors::class);
-         // Register Cors middleware
+        
+        // Excepción para CSRF
+        $middleware->validateCsrfTokens(except: [
+            'https://back-production-3ec7.up.railway.app/api/*'
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

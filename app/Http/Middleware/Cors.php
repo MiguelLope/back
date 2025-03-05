@@ -7,24 +7,31 @@ use Illuminate\Http\Request;
 
 class Cors
 {
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return \Illuminate\Http\Response
+     */
     public function handle(Request $request, Closure $next)
     {
-        $allowedOrigins = [
-            env('FRONT_URL', 'https://front-production-cc8a.up.railway.app'),
-            // Agrega otros orígenes permitidos si es necesario
-        ];
-
-        $origin = $request->headers->get('Origin');
-
-        if (in_array($origin, $allowedOrigins)) {
-            $response = $next($request);
-            $response->headers->set('Access-Control-Allow-Origin', $origin);
-            $response->headers->set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
-            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token, Origin, Authorization, withCredentials');
-            $response->headers->set('Access-Control-Allow-Credentials', 'true'); // Importante para credenciales
-            return $response;
+        // Manejar solicitudes preflight OPTIONS
+        if ($request->isMethod('OPTIONS')) {
+            return response('', 200)
+                ->header('Access-Control-Allow-Origin', 'https://front-production-cc8a.up.railway.app')
+                ->header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+                ->header('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token, Origin, Authorization')
+                ->header('Access-Control-Allow-Credentials', 'true');
         }
-
-        return $next($request); // Si el origen no está permitido, continúa sin modificar las cabeceras
+    
+        $response = $next($request);
+    
+        $response->headers->set('Access-Control-Allow-Origin', 'https://front-production-cc8a.up.railway.app');
+        $response->headers->set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
+        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token, Origin, Authorization');
+        $response->headers->set('Access-Control-Allow-Credentials', 'true');
+    
+        return $response;
     }
 }
