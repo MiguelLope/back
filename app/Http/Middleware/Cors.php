@@ -7,21 +7,24 @@ use Illuminate\Http\Request;
 
 class Cors
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return \Illuminate\Http\Response
-     */
     public function handle(Request $request, Closure $next)
     {
-        $response = $next($request);
+        $allowedOrigins = [
+            env('FRONT_URL', 'https://front-production-cc8a.up.railway.app'),
+            // Agrega otros orígenes permitidos si es necesario
+        ];
 
-        $response->headers->set('Access-Control-Allow-Origin', '*');
-        $response->headers->set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
-        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token, Origin, Authorization');
+        $origin = $request->headers->get('Origin');
 
-        return $response;
+        if (in_array($origin, $allowedOrigins)) {
+            $response = $next($request);
+            $response->headers->set('Access-Control-Allow-Origin', $origin);
+            $response->headers->set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
+            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token, Origin, Authorization, withCredentials');
+            $response->headers->set('Access-Control-Allow-Credentials', 'true'); // Importante para credenciales
+            return $response;
+        }
+
+        return $next($request); // Si el origen no está permitido, continúa sin modificar las cabeceras
     }
 }
