@@ -21,18 +21,18 @@ class Cors
             'https://front-production-cc8a.up.railway.app',
             'https://back-production-3ec7.up.railway.app'
         ];
-
+    
         $origin = $request->headers->get('Origin');
-
+    
         if (in_array($origin, $allowedOrigins)) {
             $response = $next($request);
             $response->headers->set('Access-Control-Allow-Origin', $origin);
-            $response->headers->set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
-            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token, Origin, Authorization');
+            $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-XSRF-TOKEN');
             $response->headers->set('Access-Control-Allow-Credentials', 'true');
             return $response;
         }
-
-        return response('Invalid origin', 403);
+    
+        return response('Acceso no autorizado', 403);
     }
 }
