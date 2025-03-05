@@ -24,6 +24,8 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \Illuminate\Auth\Middleware\Authorize::class,
         ]);
+        $middleware->append(\App\Http\Middleware\TrustProxies::class);
+        
         
         // Excepción para CSRF
         $middleware->validateCsrfTokens(except: [
