@@ -14,24 +14,25 @@ class Cors
      * @param  \Closure  $next
      * @return \Illuminate\Http\Response
      */
+    // En tu middleware Cors.php
     public function handle(Request $request, Closure $next)
     {
-        // Manejar solicitudes preflight OPTIONS
-        if ($request->isMethod('OPTIONS')) {
-            return response('', 200)
-                ->header('Access-Control-Allow-Origin', 'https://front-production-cc8a.up.railway.app')
-                ->header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
-                ->header('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token, Origin, Authorization')
-                ->header('Access-Control-Allow-Credentials', 'true');
+        $allowedOrigins = [
+            'https://front-production-cc8a.up.railway.app',
+            'https://back-production-3ec7.up.railway.app'
+        ];
+
+        $origin = $request->headers->get('Origin');
+
+        if (in_array($origin, $allowedOrigins)) {
+            $response = $next($request);
+            $response->headers->set('Access-Control-Allow-Origin', $origin);
+            $response->headers->set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
+            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token, Origin, Authorization');
+            $response->headers->set('Access-Control-Allow-Credentials', 'true');
+            return $response;
         }
-    
-        $response = $next($request);
-    
-        $response->headers->set('Access-Control-Allow-Origin', 'https://front-production-cc8a.up.railway.app');
-        $response->headers->set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
-        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token, Origin, Authorization');
-        $response->headers->set('Access-Control-Allow-Credentials', 'true');
-    
-        return $response;
+
+        return response('Invalid origin', 403);
     }
 }
