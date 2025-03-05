@@ -16,7 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens(except: [
             env('APP_URL') . '/api/*'
         ]);
-        $middleware->append(Cors::class);
+         //$middleware->append(Cors::class);
          // Register Cors middleware
     })
     ->withExceptions(function (Exceptions $exceptions) {
